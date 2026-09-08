@@ -1,148 +1,49 @@
-DROP TABLE IF EXISTS accepted;
-USE banking;
-CREATE TABLE accepted (
-    id VARCHAR(30),
-    loan_amnt DECIMAL(12,2),
-    funded_amnt DECIMAL(12,2),
-    term VARCHAR(30),
-    int_rate DECIMAL(6,3),
-    installment DECIMAL(12,2),
-    grade VARCHAR(5),
-    sub_grade VARCHAR(10),
-    emp_length VARCHAR(30),
-    home_ownership VARCHAR(30),
-    annual_inc DECIMAL(15,2),
-    verification_status VARCHAR(50),
-    issue_d VARCHAR(30),
-    loan_status VARCHAR(50),
-    purpose VARCHAR(100),
-    addr_state VARCHAR(10),
-    dti DECIMAL(10,3),
-    fico_range_low DECIMAL(6,2),
-    fico_range_high DECIMAL(6,2),
-    revol_util DECIMAL(8,3)
-);
-LOAD DATA LOCAL INFILE
-'C:\\Users\\divya\\Downloads\\accepted_sql.csv'
-INTO TABLE accepted
-CHARACTER SET utf8mb4
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
 
-LOAD DATA LOCAL INFILE
-'C:\\Users\\divya\\Downloads\\accepted_sql.csv'
-INTO TABLE accepted
-CHARACTER SET utf8mb4
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS
-(
-    @id,
-    @loan_amnt,
-    @funded_amnt,
-    @term,
-    @int_rate,
-    @installment,
-    @grade,
-    @sub_grade,
-    @emp_length,
-    @home_ownership,
-    @annual_inc,
-    @verification_status,
-    @issue_d,
-    @loan_status,
-    @purpose,
-    @addr_state,
-    @dti,
-    @fico_range_low,
-    @fico_range_high,
-    @revol_util
-)
-SET
-    id = NULLIF(@id, ''),
-    loan_amnt = NULLIF(@loan_amnt, ''),
-    funded_amnt = NULLIF(@funded_amnt, ''),
-    term = NULLIF(@term, ''),
-    int_rate = NULLIF(@int_rate, ''),
-    installment = NULLIF(@installment, ''),
-    grade = NULLIF(@grade, ''),
-    sub_grade = NULLIF(@sub_grade, ''),
-    emp_length = NULLIF(@emp_length, ''),
-    home_ownership = NULLIF(@home_ownership, ''),
-    annual_inc = NULLIF(@annual_inc, ''),
-    verification_status = NULLIF(@verification_status, ''),
-    issue_d = NULLIF(@issue_d, ''),
-    loan_status = NULLIF(@loan_status, ''),
-    purpose = NULLIF(@purpose, ''),
-    addr_state = NULLIF(@addr_state, ''),
-    dti = NULLIF(@dti, ''),
-    fico_range_low = NULLIF(@fico_range_low, ''),
-    fico_range_high = NULLIF(@fico_range_high, ''),
-    revol_util = NULLIF(@revol_util, '');
-
-
-
-
-
-
-
-
-
-
-/*How many total loans are present in the dataset?*/
+#How many total loans are present in the dataset?
 SELECT COUNT(*)
 FROM banking.accepted;
 
-/*How many unique loan IDs are present in the dataset?*/
+#How many unique loan IDs are present in the dataset?
 SELECT COUNT(DISTINCT id)
 FROM banking.accepted;
 
-/*Display all unique loan statuses available in the dataset.*/
+#Display all unique loan statuses available in the dataset.
 SELECT distinct(loan_status)
 FROM banking.accepted;
 
-/*Find the number of loans for each loan status.*/
+#Find the number of loans for each loan status.
 SELECT loan_status, COUNT(id)
 FROM banking.accepted
 GROUP BY loan_status;
 
-/*Find the total loan amount issued by the company.*/
+#Find the total loan amount issued by the company.
 SELECT SUM(loan_amnt)
 FROM banking.accepted;
 
-/*Find the average loan amount.*/
+#Find the average loan amount.
 SELECT avg(loan_amnt)
 FROM banking.accepted;
 
-/*Find the minimum and maximum loan amount.*/
+#Find the minimum and maximum loan amount.
 SELECT MIN(loan_amnt),MAX(loan_amnt)
 FROM banking.accepted;
 
-/*Find the total number of loans for each loan grade.*/
+#Find the total number of loans for each loan grade.
 SELECT grade, COUNT(id)
 FROM banking.accepted
 GROUP BY grade;
 
-/*Find the average interest rate for each loan grade.*/
+#Find the average interest rate for each loan grade.
 SELECT grade, AVG(int_rate)
 FROM banking.accepted
 GROUP BY grade;
 
-/*Which loan grade has the highest average interest rate?*/
+#Which loan grade has the highest average interest rate?
 SELECT grade, AVG(int_rate) AS avgintrest_rate
 FROM banking.accepted
 GROUP BY grade
 ORDER BY avgintrest_rate desc
 LIMIT 1;
-
-
-
-
-
-
 
 # Find the total loan amount for each loan grade.
 SELECT SUM(loan_amnt) AS total_loan_amnt, grade
